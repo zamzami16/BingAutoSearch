@@ -4,6 +4,8 @@ Automate Microsoft Bing auto search to earn point from Microsoft Reward. for mor
 
 # Requirements
 
+you can directly using executable files on release. you just need using this directly.
+
 - Python installed on your machine.
 - Basic knowledge using `terminal`
 
@@ -59,23 +61,26 @@ Minimize your terminal, and wait until the process finished. the estimation time
 
 if you using screen with `1366 x 768` resolution, i think you don't need configure the pointer point. if you use another screen resolutions, you need configure it.
 
-open `AutoBingSearch.py` files, and then edit this code according to your searchbar point / locations.
+open `config.ini` file, and then edit this code according to your searchbar point / locations.
 
-```python
-pg.moveTo(500, 125) # change with your actual searchbar location
+```ini
+[default]
+x = 650         // change with measured x position of your search bar
+y = 185         // change with measured y position of your search bar
+looptimes = 32  // change times the scripts will generate word.
 ```
 
 To obtain search bar location / poin, see [get searchbar location](#get-search-bar-location)
 
 You can refer this table for configuring the serach bar location:
 
-| Resolution | Scale | Location (x,y) | 
-| ----------- | ----------- | ----------- |
-| `1366 x 768` | 100% | (500, 125) | 
-| `1920 x 1080` | 125% | (650, 185) | 
-
+| Resolution    | Scale | Location (x,y) |
+| ------------- | ----- | -------------- |
+| `1366 x 768`  | 100%  | (500, 125)     |
+| `1920 x 1080` | 125%  | (650, 185)     |
 
 ## Get Search bar Location
+
 - Install [Microsoft Power Toys](https://learn.microsoft.com/en-us/windows/powertoys/install)
 
 - Open your Microsoft Edge
