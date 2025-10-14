@@ -14,15 +14,41 @@ class Delay:
 
 
 @dataclass
+class Scroll:
+    min: int
+    max: int
+
+    @staticmethod
+    def from_dict(d: dict) -> "Scroll":
+        return Scroll(min=int(d.get("min", 0)), max=int(d.get("max", 0)))
+
+
+@dataclass
+class TotalScroll:
+    min: int
+    max: int
+
+    @staticmethod
+    def from_dict(d: dict) -> "TotalScroll":
+        return TotalScroll(min=int(d.get("min", 2)), max=int(d.get("max", 5)))
+
+
+@dataclass
 class GlobalSetting:
     delay: Delay
     total_search: int
+    scroll: Scroll
+    total_scroll: TotalScroll
 
     @staticmethod
     def from_dict(d: dict) -> "GlobalSetting":
         return GlobalSetting(
             delay=Delay.from_dict(d.get("delay", {})),
             total_search=int(d.get("total_search", 0)),
+            scroll=Scroll.from_dict(d.get("scroll", {"min": 500, "max": 1000})),
+            total_scroll=TotalScroll.from_dict(
+                d.get("total_scroll", {"min": 2, "max": 5})
+            ),
         )
 
 
@@ -92,6 +118,8 @@ class Config:
             "global_setting": {
                 "delay": {"min": 3, "max": 7},
                 "total_search": 32,
+                "scroll": {"min": 500, "max": 1000},
+                "total_scroll": {"min": 2, "max": 5},
             },
             "data": [
                 {

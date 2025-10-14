@@ -69,7 +69,7 @@ Jika ingin build sendiri, ikuti langkah berikut untuk membuat single-file Window
    ```
 2. Jalankan perintah berikut dari folder project:
    ```pwsh
-   D:/KERJA/python/auto-bing-search/venv/Scripts/python.exe -m PyInstaller --onefile --add-data "resources/config.yml;random_word" --add-data "resources/database/words.json;random_word/database" AutoBingSearch.py
+   python.exe -m PyInstaller --onefile --add-data "resources/config.yml;random_word" --add-data "resources/database/words.json;random_word/database" AutoBingSearch.py
    ```
 3. File hasil build akan ada di folder `dist/AutoBingSearch.exe`.
 4. Copy file config.json (dan resource lain yang dibutuhkan) ke folder `dist` jika diperlukan.
@@ -77,7 +77,7 @@ Jika ingin build sendiri, ikuti langkah berikut untuk membuat single-file Window
 
 # Configuring The Pointer Position
 
-Konfigurasi pointer dan jumlah pencarian diatur melalui file `config.json`.
+Konfigurasi pointer, jumlah pencarian, range scroll, dan jumlah simulasi scroll diatur melalui file `config.json`.
 
 Contoh isi default `config.json`:
 
@@ -85,7 +85,9 @@ Contoh isi default `config.json`:
 {
   "global_setting": {
     "delay": { "min": 3, "max": 7 },
-    "total_search": 32
+    "total_search": 32,
+    "scroll": { "min": 500, "max": 1000 },
+    "total_scroll": { "min": 2, "max": 5 }
   },
   "data": [
     {
@@ -100,6 +102,8 @@ Contoh isi default `config.json`:
 - `d_x`, `d_y`: toleransi acak posisi
 - `total_search`: jumlah pencarian
 - `delay.min`, `delay.max`: jeda antar aksi (detik)
+- `scroll.min`, `scroll.max`: range nilai scroll (misal: 500-1000)
+- `total_scroll.min`, `total_scroll.max`: jumlah simulasi scroll per pencarian (misal: 2-5)
 
 Ubah nilai pada file `config.json` sesuai kebutuhan dan resolusi layar kamu. Jika file tidak ditemukan, aplikasi akan menggunakan nilai default di atas.
 

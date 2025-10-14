@@ -31,8 +31,10 @@ class TestAutoGUIBot(unittest.TestCase):
         self.assertTrue(min_y <= y <= max_y)
 
     def test_get_random_scroll(self):
-        scroll = self.bot.get_random_scroll()
-        self.assertTrue(500 <= scroll <= 1000)
+        scroll = self.bot.get_random_scroll(self.config)
+        min_scroll = self.config.global_setting.scroll.min
+        max_scroll = self.config.global_setting.scroll.max
+        self.assertTrue(min_scroll <= scroll <= max_scroll)
 
     @patch("pyautogui.moveTo")
     @patch("pyautogui.doubleClick")
@@ -62,6 +64,11 @@ class TestAutoGUIBot(unittest.TestCase):
         self.assertTrue(mock_press.called)
         self.assertTrue(mock_sleep.called)
         self.assertTrue(mock_scroll.called)
+        # Jumlah scroll dipanggil harus sesuai range di config
+        min_scroll = test_config.global_setting.total_scroll.min
+        max_scroll = test_config.global_setting.total_scroll.max
+        self.assertGreaterEqual(mock_scroll.call_count, min_scroll)
+        self.assertLessEqual(mock_scroll.call_count, max_scroll)
 
 
 if __name__ == "__main__":

@@ -35,9 +35,11 @@ class AutoGUIBot:
         y = r.randint(min_y, max_y)
         return x, y
 
-    def get_random_scroll(self) -> int:
+    def get_random_scroll(self, config: Config) -> int:
         r = Random()
-        val = r.randint(500, 1000)
+        val = r.randint(
+            config.global_setting.scroll.min, config.global_setting.scroll.max
+        )
         return val
 
     def perform_interaction(self, config: Config):
@@ -51,10 +53,17 @@ class AutoGUIBot:
                 pg.press("enter")
                 pg.sleep(self.get_random_delay(config))
                 pg.moveTo(x, y + 200)
-                pg.scroll(-self.get_random_scroll())
-                pg.sleep(self.get_random_delay(config))
-                pg.scroll(self.get_random_scroll())
-                pg.sleep(self.get_random_delay(config))
+
+                r = Random()
+                n_scroll = r.randint(
+                    config.global_setting.total_scroll.min,
+                    config.global_setting.total_scroll.max,
+                )
+                for _ in range(n_scroll):
+                    scroll_val = self.get_random_scroll(config)
+                    direction = r.choice([-1, 1])
+                    pg.scroll(direction * scroll_val)
+                    pg.sleep(self.get_random_delay(config))
 
     def run(self):
         pg.sleep(3)
