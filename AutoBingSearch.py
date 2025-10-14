@@ -1,3 +1,5 @@
+__version__ = "2.0.0"
+
 from random_word import RandomWords
 from tqdm import tqdm
 import pyautogui as pg
