@@ -39,7 +39,7 @@ python -m pip install -r requirements.txt
 On opened new tab of Microsoft edge, open terminal, and then run this:
 
 ```bash
-python AutoBingSearch.Py
+python AutoBingSearch.py
 ```
 
 Or you can run using Powershell script on `search.ps1` script. `Note` that if you not use virtual environment, delete the first line of code
@@ -57,34 +57,59 @@ and just type on your terminal.
 
 Minimize your terminal, and wait until the process finished. the estimation time of running this is among 9 minutes.
 
+# Build Windows Executable (.exe)
+
+Kamu bisa langsung menggunakan file executable yang tersedia di folder `release` jika tidak ingin repot build manual. Cukup download dan jalankan file `.exe` tersebut.
+
+Jika ingin build sendiri, ikuti langkah berikut untuk membuat single-file Windows executable menggunakan PyInstaller (bundling semua dependencies dan config files):
+
+1. Pastikan sudah install PyInstaller:
+   ```bash
+   pip install pyinstaller
+   ```
+2. Jalankan perintah berikut dari folder project:
+   ```pwsh
+   D:/KERJA/python/auto-bing-search/venv/Scripts/python.exe -m PyInstaller --onefile --add-data "resources/config.yml;random_word" --add-data "resources/database/words.json;random_word/database" AutoBingSearch.py
+   ```
+3. File hasil build akan ada di folder `dist/AutoBingSearch.exe`.
+4. Copy file config.json (dan resource lain yang dibutuhkan) ke folder `dist` jika diperlukan.
+5. Jalankan `AutoBingSearch.exe` dari folder `dist`.
+
 # Configuring The Pointer Position
 
-if you using screen with `1366 x 768` resolution, i think you don't need configure the pointer point. if you use another screen resolutions, you need configure it.
+Konfigurasi pointer dan jumlah pencarian diatur melalui file `config.json`.
 
-open `config.ini` file, and then edit this code according to your searchbar point / locations.
+Contoh isi default `config.json`:
 
-```ini
-[default]
-x = 650         // change with measured x position of your search bar
-y = 185         // change with measured y position of your search bar
-looptimes = 32  // change times the scripts will generate word.
+```json
+{
+  "global_setting": {
+    "delay": { "min": 3, "max": 7 },
+    "total_search": 32
+  },
+  "data": [
+    {
+      "name": "screen-left",
+      "config": { "pos_x": 400, "pos_y": 50, "d_x": 150, "d_y": 5 }
+    }
+  ]
+}
 ```
 
-To obtain search bar location / poin, see [get searchbar location](#get-search-bar-location)
+- `pos_x`, `pos_y`: posisi search bar (X dan Y)
+- `d_x`, `d_y`: toleransi acak posisi
+- `total_search`: jumlah pencarian
+- `delay.min`, `delay.max`: jeda antar aksi (detik)
 
-You can refer this table for configuring the serach bar location:
+Ubah nilai pada file `config.json` sesuai kebutuhan dan resolusi layar kamu. Jika file tidak ditemukan, aplikasi akan menggunakan nilai default di atas.
 
-| Resolution    | Scale | Location (x,y) |
-| ------------- | ----- | -------------- |
-| `1366 x 768`  | 100%  | (500, 125)     |
-| `1920 x 1080` | 125%  | (650, 185)     |
+Untuk mendapatkan posisi search bar, lihat bagian berikut:
 
 ## Get Search bar Location
 
 - Install [Microsoft Power Toys](https://learn.microsoft.com/en-us/windows/powertoys/install)
-
-- Open your Microsoft Edge
-- Activate `Scrren Ruler` from Power Toys by pressing `Windows + Shift + M`
-- Measure your search bar location
+- Buka Microsoft Edge
+- Aktifkan `Screen Ruler` dari Power Toys dengan menekan `Windows + Shift + M`
+- Ukur posisi search bar
 
 ![obtain-serach-bar-location](resources/configure-searchbar-location.png)
