@@ -1,62 +1,70 @@
 from random_word import RandomWords
 from tqdm import tqdm
-import configparser
-import os
 import pyautogui as pg
+from random import Random
+
+from config_model import Config, DataItem
 
 
 class AutoGUIBot:
     def __init__(self):
-        pg.PAUSE = 0.0
-        self.DEFAULT_X = 500
-        self.DEFAULT_Y = 125
-        self.DEFAULT_LOOP = 32
-
-    def ensure_config_file_exists(self):
-        file_name = "config.ini"
-        if os.path.exists(file_name):
-            return file_name
-        else:
-            config = configparser.ConfigParser()
-            config["default"] = {
-                "X": str(self.DEFAULT_X),
-                "Y": str(self.DEFAULT_Y),
-                "LoopTimes": str(self.DEFAULT_LOOP),
-            }
-            with open(file_name, "w") as configfile:
-                config.write(configfile)
-        return file_name
-
-    def read_search_bar_location_and_loop_times(self):
-        filename = self.ensure_config_file_exists()
-        config = configparser.ConfigParser()
-        config.read(filename)
-        config_value = config["default"]
-
-        x = config_value.getint("X", fallback=self.DEFAULT_X)
-        y = config_value.getint("Y", fallback=self.DEFAULT_Y)
-        loops = config_value.getint("LoopTimes", fallback=self.DEFAULT_LOOP)
-        return x, y, loops
+        pg.PAUSE = 0.01
 
     def generate_writer(self):
         r = RandomWords()
         return r.get_random_word()
 
-    def perform_interaction(self, x, y, loop_times):
-        for i in tqdm(range(loop_times)):
-            pg.moveTo(x, y)
-            pg.doubleClick()
-            pg.hotkey("ctrl", "a")
-            pg.write(self.generate_writer())
-            pg.press("enter")
-            pg.sleep(8)
+    def get_random_delay(self, config: Config) -> int:
+        r = Random()
+        val = r.randint(
+            config.global_setting.delay.min, config.global_setting.delay.max
+        )
+        return val
+
+    def get_random_location(self, item: DataItem) -> tuple[int, int]:
+        r = Random()
+        min_x, max_x = (
+            item.config.pos_x - item.config.d_x,
+            item.config.pos_x + item.config.d_x,
+        )
+        min_y, max_y = (
+            item.config.pos_y - item.config.d_y,
+            item.config.pos_y + item.config.d_y,
+        )
+        x = r.randint(min_x, max_x)
+        y = r.randint(min_y, max_y)
+        return x, y
+
+    def get_random_scroll(self) -> int:
+        r = Random()
+        val = r.randint(500, 1000)
+        return val
+
+    def perform_interaction(self, config: Config):
+        for i in tqdm(range(config.global_setting.total_search)):
+            for item in config.data:
+                x, y = self.get_random_location(item)
+                pg.moveTo(x, y)
+                pg.doubleClick()
+                pg.hotkey("ctrl", "a")
+                pg.write(self.generate_writer())
+                pg.press("enter")
+                pg.sleep(self.get_random_delay(config))
+                pg.moveTo(x, y + 200)
+                pg.scroll(-self.get_random_scroll())
+                pg.sleep(self.get_random_delay(config))
+                pg.scroll(self.get_random_scroll())
+                pg.sleep(self.get_random_delay(config))
 
     def run(self):
         pg.sleep(3)
         print("Processing...")
         pg.countdown(6)
-        x, y, loop_times = self.read_search_bar_location_and_loop_times()
-        self.perform_interaction(x, y, loop_times)
+        config = self.get_config()
+        self.perform_interaction(config)
+
+    def get_config(self):
+        return Config.from_file_or_default("config.json")
 
 
 if __name__ == "__main__":

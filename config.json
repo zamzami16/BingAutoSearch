@@ -1,0 +1,20 @@
+{
+  "global_setting": {
+    "delay": {
+      "min": 3,
+      "max": 7
+    },
+    "total_search": 32
+  },
+  "data": [
+    {
+      "name": "screean-left",
+      "config": {
+        "pos_x": 400,
+        "pos_y": 50,
+        "d_x": 150,
+        "d_y": 5
+      }
+    }
+  ]
+}
