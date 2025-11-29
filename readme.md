@@ -1,3 +1,8 @@
+> # Moved to golang for leight-weight apps
+> use this go version instead https://github.com/zamzami16/bing-auto-search
+
+---
+
 # What this
 
 Automate Microsoft Bing auto search to earn point from Microsoft Reward. for more information about microsoft reward go to [this](https://rewards.bing.com/).
